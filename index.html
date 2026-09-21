@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PORTAL SIJIL DIGITAL PPDHS</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #060814 0%, #0b1120 100%);
+      --panel-bg: rgba(15, 23, 42, 0.85);
+      --neon-blue: #00f0ff;
+      --neon-purple: #bd00ff;
+      --neon-green: #10b981;
+      --neon-amber: #f59e0b;
+      --neon-red: #ff0055;
+      --text-main: #f8fafc;
+      --border-glow: rgba(0, 240, 255, 0.15);
+    }
+    
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-portal {
+      text-align: center;
+      padding: 25px 20px 25px 20px;
+      background: rgba(6, 8, 20, 0.9);
+      border-bottom: 2px solid var(--neon-blue);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+      backdrop-filter: blur(15px);
+    }
+
+    .nav-portal {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+    
+    .btn-nav {
+      padding: 10px 24px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 1px;
+    }
+    
+    .btn-nav.active {
+      background: transparent;
+      color: var(--neon-blue);
+      border: 1px solid var(--neon-blue);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    }
+
+    .page-wrapper {
+      padding: 30px 20px 80px 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+      flex: 1;
+    }
+    
+    .page-content { display: none; }
+    .page-content.active { display: block; }
+
+    .panel-futuristic {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-glow);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    }
+
+    .alert-box {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--neon-amber);
+      color: #fef08a;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .alert-icon { font-size: 20px; }
+
+    .scorecard-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    @media (max-width: 768px) { .scorecard-container { grid-template-columns: 1fr; } }
+    
+    .scorecard {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+    .scorecard h4 { margin: 0 0 10px 0; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+    .scorecard .val { font-size: 32px; font-weight: 800; color: #ffffff; }
+
+    .dash-filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      background: rgba(7, 10, 19, 0.4);
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+      justify-content: center;
+    }
+    .dash-filters select, .dash-filters input { max-width: 300px; flex: 1; min-width: 200px; background: #070a13; border: 1px solid rgba(255,255,255,0.15); color: white; padding: 10px; border-radius: 6px; }
+
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+    @media (max-width: 850px) { .charts-grid { grid-template-columns: 1fr; } }
+    .chart-card { background: rgba(7, 10, 19, 0.3); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; text-align: center; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group.full-width { grid-column: span 2; }
+    
+    label { margin-bottom: 8px; font-weight: 700; color: var(--neon-blue); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+    input, select { background: rgba(7, 10, 19, 0.7); border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px; border-radius: 6px; color: white; font-size: 14px; }
+    input:focus, select:focus { outline: none; border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 240, 255, 0.4); }
+    select option { background: #0f172a; color: white; }
+    
+    .btn-submit { width: 100%; padding: 15px; background: linear-gradient(to right, var(--neon-blue), var(--neon-purple)); color: white; border: none; border-radius: 6px; font-weight: 800; font-size: 15px; cursor: pointer; margin-top: 15px; }
+    .btn-submit:disabled { background: #334155; box-shadow: none; cursor: not-allowed; }
+
+    .table-responsive { overflow-x: auto; margin-top: 15px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { background: rgba(0, 240, 255, 0.08); color: var(--neon-blue); padding: 14px; font-size: 13px; border-bottom: 2px solid var(--neon-blue); }
+    td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
+    tr:hover { background: rgba(0, 240, 255, 0.02); }
+
+    .btn-delete {
+      background: rgba(255, 0, 85, 0.1);
+      border: 1px solid var(--neon-red);
+      color: #ffa6c9;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-delete:hover {
+      background: var(--neon-red);
+      color: white;
+      box-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
+    }
+
+    .admin-control-panel {
+      margin-top: 40px;
+      padding: 25px;
+      background: rgba(7, 10, 19, 0.6);
+      border: 1px dashed var(--neon-purple);
+      border-radius: 8px;
+    }
+    .admin-input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 15px;
+      align-items: end;
+    }
+    @media (max-width: 768px) { .admin-input-grid { grid-template-columns: 1fr; } }
+    .btn-admin-send {
+      padding: 12px 24px;
+      background: linear-gradient(to right, var(--neon-purple), #9333ea);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(189, 0, 255, 0.3);
+    }
+
+    .pagination-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+    .btn-page { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+    .btn-page:disabled { opacity: 0.2; cursor: not-allowed; }
+    
+    #status { margin-top: 20px; padding: 16px; border-radius: 8px; text-align: center; display: none; font-weight: 600; line-height: 1.6; }
+    .loading { background: rgba(234, 179, 8, 0.15); color: #fef08a; border: 1px solid #fef08a; }
+    .success { background: rgba(34, 197, 94, 0.12); color: #e6fdf0; border: 1px solid var(--neon-green); text-align: left !important; }
+
+    .footer-copyright {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      padding: 15px 30px;
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      background: transparent;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER PORTAL DENGAN PANGGILAN LOGO AUTOMATIK -->
+  <div class="header-portal">
+<!-- HEADER PORTAL SIJIL DIGITAL (TEMA GELAP) -->
+<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;margin:0 auto;padding-top:25px;padding-bottom:20px;">
+  <div style="display:flex;justify-content:center;align-items:center;width:100%;margin-bottom:12px;">
+    <img src="https://lh3.googleusercontent.com/d/1N2DEP33sbNM5_ajD_b4Lk6WXOz4yHf06" alt="Logo PPD Hulu Selangor" style="height:85px;width:auto;object-fit:contain;margin:0 auto;display:block;" onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?id=1N2DEP33sbNM5_ajD_b4Lk6WXOz4yHf06&sz=w1000';">
+  </div>
+  <h1 style="font-size:32px;font-weight:900;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(to right,#38bdf8,#818cf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;text-align:center;width:100%;">PORTAL SIJIL DIGITAL</h1>
+  <p style="font-size:13px;color:#94a3b8;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:6px;margin-bottom:0;text-align:center;width:100%;">PEJABAT PENDIDIKAN DAERAH HULU SELANGOR</p>
+</div>
+    
+    <div class="nav-portal">
+      <button class="btn-nav active" onclick="muatDashboardAwan('pageDashboard', this)">DASHBOARD</button>
+      <button class="btn-nav" onclick="tukarPage('pageDaftar', this)">DAFTAR KEHADIRAN</button>
+      <button class="btn-nav" onclick="muatSenaraiSijil('pageSenarai', this)">SENARAI SIJIL</button>
+    </div>
+  </div>
+
+  <div class="page-wrapper">
+    
+    <!-- PAGE 1: DASHBOARD -->
+    <div id="pageDashboard" class="page-content active">
+      <div class="panel-futuristic">
+        <div class="dash-filters">
+          <select id="dashFilTahun" onchange="prosesAnalisisVisual()">
+            <option value="">-- Semua Tahun --</option>
+            <option value="2026">2026</option>
+            <option value="2025">2025</option>
+          </select>
+          <select id="dashFilJenis" onchange="prosesAnalisisVisual()">
+            <option value="">-- Semua Jenis Sijil --</option>
+            <option value="PESERTA">Sijil Penyertaan</option>
+            <option value="PENCERAMAH">Sijil Penghargaan</option>
+          </select>
+        </div>
+
+        <div class="scorecard-container">
+          <div class="scorecard" style="border-top: 3px solid var(--neon-blue);">
+            <h4>Jumlah Sijil Dikeluarkan</h4>
+            <div class="val" id="cardTotal">0</div>
+          </div>
+          <div class="scorecard" style="border-top: 3px solid var(--neon-green);">
+            <h4>Bilangan Sijil Penyertaan</h4>
+            <div class="val" id="cardPeserta">0</div>
+          </div>
+          <div class="scorecard" style="border-top: 3px solid var(--neon-purple);">
+            <h4>Bilangan Sijil Penghargaan</h4>
+            <div class="val" id="cardPenceramah">0</div>
+          </div>
+        </div>
+
+        <div id="loadingDash" style="text-align:center; color:#64748b; padding:20px;">Mengira analitik awan...</div>
+
+        <div class="charts-grid" id="chartsArea" style="display:none;">
+          <div class="chart-card">
+            <h5 style="margin:0 0 15px 0; color:var(--neon-blue);">BILANGAN SIJIL DIKELUARKAN MENGIKUT TAHUN</h5>
+            <canvas id="chartTahun"></canvas>
+          </div>
+          <div class="chart-card">
+            <h5 style="margin:0 0 15px 0; color:var(--neon-purple);">BILANGAN SIJIL MENGIKUT SEKTOR ANJURAN</h5>
+            <canvas id="chartSektor"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2: DAFTAR KEHADIRAN -->
+    <div id="pageDaftar" class="page-content">
+      <div class="panel-futuristic">
+        <div class="alert-box">
+          <span class="alert-icon">⚠️</span>
+          <span><strong>PERINGATAN:</strong> Pastikan Nama Program ditulis dengan betul kerana kesalahan akan menjejaskan sijil anda.</span>
+        </div>
+
+        <form id="attendanceForm" onsubmit="hantarBorang(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nama Penuh:</label>
+              <input type="text" id="nama" required placeholder="NAMA GURU (HURUF BESAR)">
+            </div>
+            <div class="form-group">
+              <label>No. Kad Pengenalan:</label>
+              <input type="text" id="ic" required maxlength="12" pattern="\d{12}" placeholder="Contoh: 850312105121">
+            </div>
+            <div class="form-group full-width">
+              <label>Nama Institusi:</label>
+              <select id="institusi" required>
+                <option value="">-- Pilih Institusi / Sekolah Anda --</option>
+                <option value="PPD HULU SELANGOR">PPD HULU SELANGOR</option>
+                <option value="SK BATANG KALI">SK BATANG KALI</option>
+                <option value="SK RASA">SK RASA</option>
+                <option value="SK SG CHOH">SK SG CHOH</option>
+                <option value="SK SG SELISEK">SK SG SELISEK</option>
+                <option value="SK ULU YAM BHARU">SK ULU YAM BHARU</option>
+                <option value="SK ULU YAM LAMA">SK ULU YAM LAMA</option>
+                <option value="SK HULU BERNAM">SK HULU BERNAM</option>
+                <option value="SK KUALA KUBU BHARU">SK KUALA KUBU BHARU</option>
+                <option value="SK KERLING">SK KERLING</option>
+                <option value="SK KALUMPANG">SK KALUMPANG</option>
+                <option value="SK KG KUANTAN">SK KG KUANTAN</option>
+                <option value="SK GEDANGSA">SK GEDANGSA</option>
+                <option value="SK SUNGAI BUAYA">SK SUNGAI BUAYA</option>
+                <option value="SK KAMPUNG SOEHARTO">SK KAMPUNG SOEHARTO</option>
+                <option value="SK TUN ABDUL RAZAK">SK TUN ABDUL RAZAK</option>
+                <option value="SK GESIR TENGAH">SK GESIR TENGAH</option>
+                <option value="SK SG TENGI">SK SG TENGI</option>
+                <option value="SK SRI KELEDANG">SK SRI KELEDANG</option>
+                <option value="SK SERENDAH">SK SERENDAH</option>
+                <option value="SK BUKIT BERUNTUNG">SK BUKIT BERUNTUNG</option>
+                <option value="SK AMPANG PECAH">SK AMPANG PECAH</option>
+                <option value="SK BANDAR BARU BATANG KALI">SK BANDAR BARU BATANG KALI</option>
+                <option value="SK BANDAR SUNGAI BUAYA">SK BANDAR SUNGAI BUAYA</option>
+                <option value="SK SERI FAJAR">SK SERI FAJAR</option>
+                <option value="SK TAMAN BUNGA RAYA (1)">SK TAMAN BUNGA RAYA (1)</option>
+                <option value="SK LEMBAH BERINGIN">SK LEMBAH BERINGIN</option>
+                <option value="SK BUKIT SENTOSA">SK BUKIT SENTOSA</option>
+                <option value="SK ANTARA GAPI">SK ANTARA GAPI</option>
+                <option value="SK BUKIT BERUNTUNG 2">SK BUKIT BERUNTUNG 2</option>
+                <option value="SK TAMAN BUNGA RAYA 2">SK TAMAN BUNGA RAYA 2</option>
+                <option value="SK KUALA KUBU BARU SATU">SK KUALA KUBU BARU SATU</option>
+                <option value="SK KUALA KUBU BHARU DUA">SK KUALA KUBU BHARU DUA</option>
+                <option value="SJKC BATANG KALI">SJKC BATANG KALI</option>
+                <option value="SJKC BKT TANGGA">SJKC BKT TANGGA</option>
+                <option value="SJKC CHOONG CHEE">SJKC CHOONG CHEE</option>
+                <option value="SJKC KALUMPANG">SJKC KALUMPANG</option>
+                <option value="SJKC KAMPUNG GURNEY">SJKC KAMPUNG GURNEY</option>
+                <option value="SJKC KERLING">SJKC KERLING</option>
+                <option value="SJKC KHING MING">SJKC KHING MING</option>
+                <option value="SJKC RASA">SJKC RASA</option>
+                <option value="SJKC SERENDAH">SJKC SERENDAH</option>
+                <option value="SJKT LADANG BATANG KALI">SJKT LADANG BATANG KALI</option>
+                <option value="SJKT LDG CHANGKAT ASA">SJKT LDG CHANGKAT ASA</option>
+                <option value="SJKT LDG ESCOT">SJKT LDG ESCOT</option>
+                <option value="SJKT KUALA KUBU BHARU">SJKT KUALA KUBU BHARU</option>
+                <option value="SJKT LADANG KERLING">SJKT LADANG KERLING</option>
+                <option value="SJKT LADANG KALUMPANG">SJKT LADANG KALUMPANG</option>
+                <option value="SJKT LDG LIMA BELAS">SJKT LDG LIMA BELAS</option>
+                <option value="SJKT LDG SG CHOH">SJKT LDG SG CHOH</option>
+                <option value="SJKT BUKIT BERUNTUNG">SJKT BUKIT BERUNTUNG</option>
+                <option value="SMK KUALA KUBU BHARU">SMK KUALA KUBU BHARU</option>
+                <option value="SMK KAMPONG SOEHARTO">SMK KAMPONG SOEHARTO</option>
+                <option value="SMK SUNGAI CHOH">SMK SUNGAI CHOH</option>
+                <option value="SMK KALUMPANG">SMK KALUMPANG</option>
+                <option value="SMK GEDANGSA">SMK GEDANGSA</option>
+                <option value="SMK BUKIT SENTOSA">SMK BUKIT SENTOSA</option>
+                <option value="SM SAINS HULU SELANGOR">SM SAINS HULU SELANGOR</option>
+                <option value="SMK AMPANG PECAH">SMK AMPANG PECAH</option>
+                <option value="SMK BANDAR BARU BATANG KALI">SMK BANDAR BARU BATANG KALI</option>
+                <option value="SMK BANDAR SUNGAI BUAYA">SMK BANDAR SUNGAI BUAYA</option>
+                <option value="SMK TAMAN BUNGA RAYA (1)">SMK TAMAN BUNGA RAYA (1)</option>
+                <option value="SMK SERENDAH">SMK SERENDAH</option>
+                <option value="SMK BUKIT SENTOSA 2">SMK BUKIT SENTOSA 2</option>
+                <option value="SMK SYED MASHOR">SMK SYED MASHOR</option>
+                <option value="SMK DATO' HJ KAMARUDDIN">SMK DATO' HJ KAMARUDDIN</option>
+                <option value="SAM SUNGAI SELISEK">SAM SUNGAI SELISEK</option>
+                <option value="SAMT KUALA KUBU BHARU">SAMT KUALA KUBU BHARU</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Nama Program:</label>
+              <input type="text" id="program" required placeholder="Taip Nama Program Dengan Betul">
+            </div>
+            <div class="form-group">
+              <label>Penyertaan (Jenis Sijil):</label>
+              <select id="penyertaan" required>
+                <option value="">-- Pilih Penyertaan --</option>
+                <option value="PESERTA">PESERTA</option>
+                <option value="PENCERAMAH">PENCERAMAH</option>
+                <option value="FASILITATOR">FASILITATOR</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label>Anjuran Sektor:</label>
+              <select id="anjuran" required>
+                <option value="">-- Pilih Sektor Anjuran --</option>
+                <option value="SEKTOR PEMBELAJARAN">SEKTOR PEMBELAJARAN</option>
+                <option value="SEKTOR PERANCANGAN">SEKTOR PERANCANGAN</option>
+                <option value="SEKTOR PEMBANGUNAN MURID">SEKTOR PEMBANGUNAN MURID</option>
+                <option value="SEKTOR PENGURUSAN SEKOLAH">SEKTOR PENGURUSAN SEKOLAH</option>
+                <option value="SEKTOR PENGURUSAN">SEKTOR PENGURUSAN</option>
+                <option value="SEKTOR PENTAKSIRAN DAN PEPERIKSAAN">SEKTOR PENTAKSIRAN DAN PEPERIKSAAN</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Tarikh Mula Program:</label>
+              <input type="date" id="tarikhMula" required>
+            </div>
+            <div class="form-group">
+              <label>Tarikh Akhir Program:</label>
+              <input type="date" id="tarikhAkhir" required>
+            </div>
+            
+            <div class="form-group full-width">
+              <label>Lokasi:</label>
+              <input type="text" id="lokasi" required placeholder="Contoh: Auditorium PPD Hulu Selangor">
+            </div>
+            <div class="form-group full-width">
+              <label>Alamat Emel Penerima:</label>
+              <input type="email" id="emel" required placeholder="user@moe-dl.edu.my">
+            </div>
+          </div>
+          <button type="submit" id="btnSubmit" class="btn-submit">SUBMIT & REKOD KEHADIRAN</button>
+        </form>
+        <div id="status"></div>
+      </div>
+    </div>
+
+    <!-- PAGE 3: SENARAI SIJIL -->
+    <div id="pageSenarai" class="page-content">
+      <div class="panel-futuristic">
+        <h3 style="color:var(--neon-blue); margin-top:0; text-align:center; letter-spacing:1px;">REKOD SENARAI FAIL SIJIL GURU</h3>
+        
+        <div class="dash-filters" style="margin-bottom:20px;">
+          <input type="text" id="searchNama" oninput="jalankanPenapisanJadual()" placeholder="🔍 Cari Nama Penuh...">
+          <select id="saizHalaman" onchange="tukarHadHalamanJadual()" style="max-width: 140px;">
+            <option value="10">10 Baris</option>
+            <option value="50">50 Baris</option>
+            <option value="100">100 Baris</option>
+          </select>
+        </div>
+
+        <div id="loadingSenarai" style="text-align: center; color: #64748b; padding: 20px;">Menarik data awan...</div>
+        
+        <div class="table-responsive">
+          <table id="tabelSijil" style="display: none;">
+            <thead>
+              <tr>
+                <th>NO. SIJIL</th>
+                <th>NAMA PENUH</th>
+                <th>NAMA INSTITUSI</th>
+                <th>PENYERTAAN</th>
+                <th>STATUS SIJIL</th>
+                <th>TINDAKAN</th>
+              </tr>
+            </thead>
+            <tbody id="badanTabelSijil"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination-controls">
+          <button id="btnBack" class="btn-page" onclick="pageKeBelakang()">&laquo; Back</button>
+          <span id="indikatorPage" style="font-size: 13px; color:#94a3b8; font-weight: 600;">Halaman 1 dari 1</span>
+          <button id="btnForward" class="btn-page" onclick="pageKeHadapan()">Next &raquo;</button>
+        </div>
+
+        <!-- PANEL KELULUSAN & PENJANAAN PUKAL ADMIN -->
+        <div class="admin-control-panel">
+          <h4 style="margin: 0 0 15px 0; color: var(--neon-purple); letter-spacing: 1px;">🔐 PANEL KELULUSAN JANA & HANTAR EMEL (ADMIN ONLY)</h4>
+          <div class="admin-input-grid">
+            <div class="form-group" style="margin:0;">
+              <label>ID Admin MOE:</label>
+              <input type="email" id="adminId" placeholder="ppd-b050-cm10@moe-dl.edu.my">
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label>Kata Laluan DELIMA:</label>
+              <input type="password" id="adminPass" placeholder="••••••••">
+            </div>
+            <button class="btn-admin-send" id="btnAdminRelease" onclick="triggerPenghantaranPukalAdmin()">JANA & HANTAR SEMUA SIJIL</button>
+          </div>
+          <div id="adminStatusArea" style="margin-top: 15px; font-weight: bold; font-size: 13px; display: none;"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-copyright">
+    Hak Cipta USTP PPDHS
+  </div>
+
+  <script>
+    // GANTI dengan URL deployment Apps Script Web App anda yang berakhir dengan /exec
+    const API_URL = "PASTE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+    var globalData = [];
+    var dataTapisDash = [];
+    var dataTapisJadual = [];
+    var pageAktif = 1;
+    var barisLimit = 10;
+    var instanceChartTahun = null;
+    var instanceChartSektor = null;
+
+    async function apiGet(action, params = {}) {
+      const url = new URL(API_URL);
+      url.searchParams.set('action', action);
+      Object.keys(params).forEach(k => url.searchParams.set(k, params[k]));
+      const res = await fetch(url.toString(), { method: 'GET', redirect: 'follow' });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || 'Ralat API');
+      return data.data;
+    }
+
+    async function apiPost(action, payload = {}) {
+      // text/plain mengelakkan CORS preflight pada Apps Script Web App.
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action, ...payload })
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || 'Ralat API');
+      return data.data;
+    }
+
+    window.onload = function() {
+      if (API_URL.includes('PASTE_APPS_SCRIPT')) {
+        document.getElementById('loadingDash').innerText = 'Sila tetapkan API_URL Apps Script dalam index.html.';
+        return;
+      }
+      muatDashboardAwan('pageDashboard', document.getElementsByClassName('btn-nav')[0]);
+    };
+
+    function tukarPage(pageId, btnElemen) {
+      Array.from(document.getElementsByClassName('page-content')).forEach(x => x.classList.remove('active'));
+      Array.from(document.getElementsByClassName('btn-nav')).forEach(x => x.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      if (btnElemen) btnElemen.classList.add('active');
+    }
+
+    async function muatDashboardAwan(pageId, btnElemen) {
+      document.getElementById('loadingDash').style.display = 'block';
+      document.getElementById('chartsArea').style.display = 'none';
+      tukarPage(pageId, btnElemen);
+      try {
+        globalData = await apiGet('list');
+        document.getElementById('loadingDash').style.display = 'none';
+        prosesAnalisisVisual();
+      } catch (e) {
+        document.getElementById('loadingDash').innerText = 'Gagal memuat sistem dashboard: ' + e.message;
+      }
+    }
+
+    function prosesAnalisisVisual() {
+      var fTah = document.getElementById('dashFilTahun').value;
+      var fJen = document.getElementById('dashFilJenis').value;
+      dataTapisDash = globalData.filter(row => (fTah === '' || row.tahun === fTah) && (fJen === '' || row.penyertaan === fJen));
+      document.getElementById('cardTotal').innerText = dataTapisDash.length;
+      document.getElementById('cardPeserta').innerText = dataTapisDash.filter(r => r.penyertaan === 'PESERTA').length;
+      document.getElementById('cardPenceramah').innerText = dataTapisDash.filter(r => r.penyertaan === 'PENCERAMAH' || r.penyertaan === 'FASILITATOR').length;
+      var kvTahun = {}, kvSektor = {};
+      dataTapisDash.forEach(row => {
+        if (row.tahun) kvTahun[row.tahun] = (kvTahun[row.tahun] || 0) + 1;
+        if (row.anjuran) kvSektor[row.anjuran] = (kvSektor[row.anjuran] || 0) + 1;
+      });
+      renderGrafTahun(Object.keys(kvTahun), Object.values(kvTahun));
+      renderGrafSektor(Object.keys(kvSektor), Object.values(kvSektor));
+      document.getElementById('chartsArea').style.display = 'grid';
+    }
+
+    function renderGrafTahun(labels, dataValues) {
+      if (instanceChartTahun) instanceChartTahun.destroy();
+      instanceChartTahun = new Chart(document.getElementById('chartTahun').getContext('2d'), {
+        type:'bar', data:{labels,datasets:[{label:'Bilangan Sijil',data:dataValues,backgroundColor:'rgba(0,240,255,.4)',borderColor:'#00f0ff',borderWidth:2}]},
+        options:{scales:{y:{beginAtZero:true,ticks:{color:'#94a3b8'}},x:{ticks:{color:'#94a3b8'}}},plugins:{legend:{display:false}}}
+      });
+    }
+
+    function renderGrafSektor(labels, dataValues) {
+      if (instanceChartSektor) instanceChartSektor.destroy();
+      instanceChartSektor = new Chart(document.getElementById('chartSektor').getContext('2d'), {
+        type:'bar', data:{labels,datasets:[{label:'Bilangan Sijil',data:dataValues,backgroundColor:'rgba(189,0,255,.4)',borderColor:'#bd00ff',borderWidth:2}]},
+        options:{indexAxis:'y',scales:{x:{beginAtZero:true,ticks:{color:'#94a3b8'}},y:{ticks:{color:'#94a3b8'}}},plugins:{legend:{display:false}}}
+      });
+    }
+
+    async function muatSenaraiSijil(pageId, btnElemen) {
+      tukarPage(pageId, btnElemen);
+      document.getElementById('loadingSenarai').style.display = 'block';
+      document.getElementById('tabelSijil').style.display = 'none';
+      try {
+        globalData = await apiGet('list');
+        dataTapisJadual = globalData;
+        document.getElementById('loadingSenarai').style.display = 'none';
+        pageAktif = 1;
+        renderJadualVisual();
+      } catch(e) {
+        document.getElementById('loadingSenarai').innerText = 'Ralat memuatkan pangkalan data: ' + e.message;
+      }
+    }
+
+    function jalankanPenapisanJadual() {
+      var carian = document.getElementById('searchNama').value.toLowerCase();
+      dataTapisJadual = globalData.filter(item =>
+        (item.nama && item.nama.toLowerCase().includes(carian)) ||
+        (item.noSijil && item.noSijil.toLowerCase().includes(carian)) ||
+        (item.institusi && item.institusi.toLowerCase().includes(carian)));
+      pageAktif = 1; renderJadualVisual();
+    }
+    function tukarHadHalamanJadual(){ barisLimit=parseInt(document.getElementById('saizHalaman').value); pageAktif=1; renderJadualVisual(); }
+    function pageKeBelakang(){ if(pageAktif>1){pageAktif--;renderJadualVisual();} }
+    function pageKeHadapan(){ var maxPage=Math.ceil(dataTapisJadual.length/barisLimit); if(pageAktif<maxPage){pageAktif++;renderJadualVisual();} }
+
+    function esc(v){ return String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+
+    function renderJadualVisual() {
+      var body=document.getElementById('badanTabelSijil'); body.innerHTML='';
+      if(dataTapisJadual.length===0){
+        body.innerHTML='<tr><td colspan="6" style="text-align:center;color:#475569;padding:20px;">Tiada rekod data sepadan ditemui.</td></tr>';
+        document.getElementById('indikatorPage').innerText='Halaman 0 dari 0';
+        document.getElementById('btnBack').disabled=true; document.getElementById('btnForward').disabled=true;
+        document.getElementById('tabelSijil').style.display='table'; return;
+      }
+      var start=(pageAktif-1)*barisLimit, dataPotong=dataTapisJadual.slice(start,start+barisLimit);
+      dataPotong.forEach(item=>{
+        var no=item.noSijil||'Tiada Siri', inst=item.institusi||'PPD HULU SELANGOR', peranan=(item.penyertaan||'PESERTA').toUpperCase();
+        var warna=item.statusEmel==='DIJANA'?'var(--neon-green)':'var(--neon-amber)';
+        var tr=document.createElement('tr');
+        tr.innerHTML='<td style="color:var(--neon-blue);font-weight:700;">'+esc(no)+'</td><td style="font-weight:600;color:#fff;">'+esc(item.nama)+'</td><td>'+esc(inst)+'</td><td style="color:var(--neon-purple);font-weight:700;">'+esc(peranan)+'</td><td style="color:'+warna+';font-weight:700;">'+esc(item.statusEmel)+'</td><td></td>';
+        var b=document.createElement('button'); b.className='btn-delete'; b.textContent='Delete'; b.onclick=()=>requestPadamRekod(no); tr.lastElementChild.appendChild(b); body.appendChild(tr);
+      });
+      var maxPage=Math.ceil(dataTapisJadual.length/barisLimit);
+      document.getElementById('indikatorPage').innerText='Halaman '+pageAktif+' dari '+maxPage;
+      document.getElementById('btnBack').disabled=pageAktif===1;
+      document.getElementById('btnForward').disabled=pageAktif===maxPage||maxPage===0;
+      document.getElementById('tabelSijil').style.display='table';
+    }
+
+    async function hantarBorang(e) {
+      e.preventDefault();
+      var btn=document.getElementById('btnSubmit'), st=document.getElementById('status');
+      btn.disabled=true; st.className='loading'; st.style.display='block'; st.innerText='⏳ Memproses maklumat kehadiran...';
+      var dataBorang={nama:nama.value,ic:ic.value,institusi:institusi.value,program:program.value,penyertaan:penyertaan.value,anjuran:anjuran.value,tarikhMula:tarikhMula.value,tarikhAkhir:tarikhAkhir.value,lokasi:lokasi.value,emel:emel.value};
+      try {
+        var res=await apiPost('register',{data:dataBorang});
+        st.className='success'; st.innerHTML='✅ Rekod Kehadiran Berjaya Didaftarkan!<br>No. Sijil: <strong>'+esc(res.noSijil)+'</strong>';
+        document.getElementById('attendanceForm').reset();
+      } catch(err) {
+        st.className='loading'; st.style.borderColor='var(--neon-red)'; st.style.color='#ffa6c9'; st.innerText='❌ Ralat: '+err.message;
+      } finally { btn.disabled=false; }
+    }
+
+    async function triggerPenghantaranPukalAdmin() {
+      var id=document.getElementById('adminId').value, pass=document.getElementById('adminPass').value;
+      var statusText=document.getElementById('adminStatusArea'), btn=document.getElementById('btnAdminRelease');
+      if(!id||!pass){alert('Sila isi ID Admin dan Kata Laluan terlebih dahulu!');return;}
+      btn.disabled=true; statusText.style.display='block'; statusText.style.color='var(--neon-amber)'; statusText.innerText='⏳ Sedang menjana dan menghantar sijil...';
+      try {
+        var msg=await apiPost('bulkSend',{adminId:id,adminPass:pass});
+        statusText.style.color=msg.includes('Ralat')?'var(--neon-red)':'var(--neon-green)'; statusText.innerText=msg;
+        if(!msg.includes('Ralat')){ document.getElementById('adminPass').value=''; await muatSenaraiSijil('pageSenarai',document.querySelectorAll('.btn-nav')[2]); }
+      } catch(e){ statusText.style.color='var(--neon-red)'; statusText.innerText='Ralat Jaringan: '+e.message; }
+      finally{ btn.disabled=false; }
+    }
+
+    async function requestPadamRekod(noSijil) {
+      var id=document.getElementById('adminId').value, pass=document.getElementById('adminPass').value;
+      if(!id||!pass){ alert('Untuk memadam rekod, isi ID Admin dan Kata Laluan di Panel Admin terlebih dahulu.'); return; }
+      if(!confirm('Adakah anda pasti untuk memadam rekod siri '+noSijil+'?')) return;
+      document.getElementById('loadingSenarai').style.display='block'; document.getElementById('tabelSijil').style.display='none';
+      try {
+        var msg=await apiPost('delete',{noSijil,adminId:id,adminPass:pass});
+        alert(msg); await muatSenaraiSijil('pageSenarai',document.querySelectorAll('.btn-nav')[2]);
+      } catch(e){ alert('Ralat memadam rekod: '+e.message); document.getElementById('loadingSenarai').style.display='none'; document.getElementById('tabelSijil').style.display='table'; }
+    }
+  </script>
+</body>
+</html>
