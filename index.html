@@ -506,15 +506,49 @@
     var instanceChartTahun = null;
     var instanceChartSektor = null;
 
-    async function apiGet(action, params = {}) {
-      const url = new URL(API_URL);
-      url.searchParams.set('action', action);
-      Object.keys(params).forEach(k => url.searchParams.set(k, params[k]));
-      const res = await fetch(url.toString(), { method: 'GET', redirect: 'follow' });
-      const data = await res.json();
-      if (!data.ok) throw new Error(data.message || 'Ralat API');
-      return data.data;
-    }
+   async function apiGet(action, params = {}) {
+  const query = new URLSearchParams();
+
+  query.set('action', action);
+
+  Object.keys(params).forEach(function(key) {
+    query.set(key, params[key]);
+  });
+
+  // Elakkan browser/GitHub menggunakan response lama
+  query.set('_t', Date.now());
+
+  const url = API_URL + '?' + query.toString();
+
+  const res = await fetch(url, {
+    method: 'GET',
+    cache: 'no-store',
+    redirect: 'follow'
+  });
+
+  const text = await res.text();
+
+  // Pastikan Apps Script benar-benar pulangkan JSON
+  if (text.trim().startsWith('<')) {
+    throw new Error(
+      'Apps Script memulangkan HTML, bukan JSON. Sila refresh dan cuba semula.'
+    );
+  }
+
+  let data;
+
+  try {
+    data = JSON.parse(text);
+  } catch (err) {
+    throw new Error('Respons API bukan JSON yang sah.');
+  }
+
+  if (!data.ok) {
+    throw new Error(data.message || 'Ralat API');
+  }
+
+  return data.data;
+}
 
     async function apiPost(action, payload = {}) {
       // text/plain mengelakkan CORS preflight pada Apps Script Web App.
