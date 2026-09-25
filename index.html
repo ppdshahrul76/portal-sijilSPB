@@ -391,6 +391,7 @@
                 <option value="PESERTA">PESERTA</option>
                 <option value="PENCERAMAH">PENCERAMAH</option>
                 <option value="FASILITATOR">FASILITATOR</option>
+                <option value="URUSETIA">URUSETIA</option>
               </select>
             </div>
             <div class="form-group full-width">
@@ -597,7 +598,7 @@
       dataTapisDash = globalData.filter(row => (fTah === '' || row.tahun === fTah) && (fJen === '' || row.penyertaan === fJen));
       document.getElementById('cardTotal').innerText = dataTapisDash.length;
       document.getElementById('cardPeserta').innerText = dataTapisDash.filter(r => r.penyertaan === 'PESERTA').length;
-      document.getElementById('cardPenceramah').innerText = dataTapisDash.filter(r => r.penyertaan === 'PENCERAMAH' || r.penyertaan === 'FASILITATOR').length;
+document.getElementById('cardPenceramah').innerText = dataTapisDash.filter(r => r.penyertaan === 'PENCERAMAH' || r.penyertaan === 'FASILITATOR' || r.penyertaan === 'URUSETIA').length;
       var kvTahun = {}, kvSektor = {};
       dataTapisDash.forEach(row => {
         if (row.tahun) kvTahun[row.tahun] = (kvTahun[row.tahun] || 0) + 1;
