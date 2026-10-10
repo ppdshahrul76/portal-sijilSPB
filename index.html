@@ -218,20 +218,25 @@
       background: transparent;
       z-index: 999;
     }
+
+    /* MEDAN HONEYPOT TERSEMBUNYI UNTUK BOT SPAM */
+    .hidden-trap {
+      display: none !important;
+      visibility: hidden !important;
+    }
   </style>
 </head>
 <body>
 
-  <!-- HEADER PORTAL DENGAN PANGGILAN LOGO AUTOMATIK -->
+  <!-- HEADER PORTAL SIJIL DIGITAL -->
   <div class="header-portal">
-<!-- HEADER PORTAL SIJIL DIGITAL (TEMA GELAP) -->
-<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;margin:0 auto;padding-top:25px;padding-bottom:20px;">
-  <div style="display:flex;justify-content:center;align-items:center;width:100%;margin-bottom:12px;">
-    <img src="https://lh3.googleusercontent.com/d/1N2DEP33sbNM5_ajD_b4Lk6WXOz4yHf06" alt="Logo PPD Hulu Selangor" style="height:85px;width:auto;object-fit:contain;margin:0 auto;display:block;" onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?id=1N2DEP33sbNM5_ajD_b4Lk6WXOz4yHf06&sz=w1000';">
-  </div>
-  <h1 style="font-size:32px;font-weight:900;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(to right,#38bdf8,#818cf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;text-align:center;width:100%;">PORTAL SIJIL DIGITAL</h1>
-  <p style="font-size:13px;color:#94a3b8;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:6px;margin-bottom:0;text-align:center;width:100%;">PEJABAT PENDIDIKAN DAERAH HULU SELANGOR</p>
-</div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;margin:0 auto;padding-top:25px;padding-bottom:20px;">
+      <div style="display:flex;justify-content:center;align-items:center;width:100%;margin-bottom:12px;">
+        <img src="https://lh3.googleusercontent.com/d/1N2DEP33sbNM5_ajD_b4Lk6WXOz4yHf06" alt="Logo PPD Hulu Selangor" style="height:85px;width:auto;object-fit:contain;margin:0 auto;display:block;" onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?id=1N2DEP33sbNM5_ajD_b4Lk6WXOz4yHf06&sz=w1000';">
+      </div>
+      <h1 style="font-size:32px;font-weight:900;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(to right,#38bdf8,#818cf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;text-align:center;width:100%;">PORTAL SIJIL DIGITAL</h1>
+      <p style="font-size:13px;color:#94a3b8;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:6px;margin-bottom:0;text-align:center;width:100%;">PEJABAT PENDIDIKAN DAERAH HULU SELANGOR</p>
+    </div>
     
     <div class="nav-portal">
       <button class="btn-nav active" onclick="muatDashboardAwan('pageDashboard', this)">DASHBOARD</button>
@@ -297,6 +302,11 @@
         </div>
 
         <form id="attendanceForm" onsubmit="hantarBorang(event)">
+          <!-- HONEYPOT TRAP UNTUK BOT SPAM -->
+          <div class="hidden-trap">
+            <input type="text" id="website_trap" name="website_trap" tabindex="-1" autocomplete="off">
+          </div>
+
           <div class="form-grid">
             <div class="form-group">
               <label>Nama Penuh:</label>
@@ -496,7 +506,6 @@
   </div>
 
   <script>
-    // GANTI dengan URL deployment Apps Script Web App anda yang berakhir dengan /exec
     const API_URL = "https://script.google.com/macros/s/AKfycbwbio6fNj30w3Kc3b4p2XefS3n7jTiNh3uyafOz5wWEL5GVLEpoolH0CaXyZYvs39zC/exec";
 
     var globalData = [];
@@ -507,52 +516,29 @@
     var instanceChartTahun = null;
     var instanceChartSektor = null;
 
-   async function apiGet(action, params = {}) {
-  const query = new URLSearchParams();
+    async function apiGet(action, params = {}) {
+      const query = new URLSearchParams();
+      query.set('action', action);
+      Object.keys(params).forEach(key => query.set(key, params[key]));
+      query.set('_t', Date.now());
 
-  query.set('action', action);
+      const url = API_URL + '?' + query.toString();
+      const res = await fetch(url, { method: 'GET', cache: 'no-store', redirect: 'follow' });
+      const text = await res.text();
 
-  Object.keys(params).forEach(function(key) {
-    query.set(key, params[key]);
-  });
+      if (text.trim().startsWith('<')) {
+        throw new Error('Apps Script memulangkan HTML. Sila pastikan deployment menetapkan Anyone.');
+      }
 
-  // Elakkan browser/GitHub menggunakan response lama
-  query.set('_t', Date.now());
+      let data;
+      try { data = JSON.parse(text); } 
+      catch (err) { throw new Error('Respons API bukan JSON yang sah.'); }
 
-  const url = API_URL + '?' + query.toString();
-
-  const res = await fetch(url, {
-    method: 'GET',
-    cache: 'no-store',
-    redirect: 'follow'
-  });
-
-  const text = await res.text();
-
-  // Pastikan Apps Script benar-benar pulangkan JSON
-  if (text.trim().startsWith('<')) {
-    throw new Error(
-      'Apps Script memulangkan HTML, bukan JSON. Sila refresh dan cuba semula.'
-    );
-  }
-
-  let data;
-
-  try {
-    data = JSON.parse(text);
-  } catch (err) {
-    throw new Error('Respons API bukan JSON yang sah.');
-  }
-
-  if (!data.ok) {
-    throw new Error(data.message || 'Ralat API');
-  }
-
-  return data.data;
-}
+      if (!data.ok) throw new Error(data.message || 'Ralat API');
+      return data.data;
+    }
 
     async function apiPost(action, payload = {}) {
-      // text/plain mengelakkan CORS preflight pada Apps Script Web App.
       const res = await fetch(API_URL, {
         method: 'POST',
         redirect: 'follow',
@@ -565,10 +551,6 @@
     }
 
     window.onload = function() {
-      if (API_URL.includes('PASTE_APPS_SCRIPT')) {
-        document.getElementById('loadingDash').innerText = 'Sila tetapkan API_URL Apps Script dalam index.html.';
-        return;
-      }
       muatDashboardAwan('pageDashboard', document.getElementsByClassName('btn-nav')[0]);
     };
 
@@ -598,7 +580,8 @@
       dataTapisDash = globalData.filter(row => (fTah === '' || row.tahun === fTah) && (fJen === '' || row.penyertaan === fJen));
       document.getElementById('cardTotal').innerText = dataTapisDash.length;
       document.getElementById('cardPeserta').innerText = dataTapisDash.filter(r => r.penyertaan === 'PESERTA').length;
-document.getElementById('cardPenceramah').innerText = dataTapisDash.filter(r => r.penyertaan === 'PENCERAMAH' || r.penyertaan === 'FASILITATOR' || r.penyertaan === 'URUSETIA').length;
+      document.getElementById('cardPenceramah').innerText = dataTapisDash.filter(r => r.penyertaan === 'PENCERAMAH' || r.penyertaan === 'FASILITATOR' || r.penyertaan === 'URUSETIA').length;
+      
       var kvTahun = {}, kvSektor = {};
       dataTapisDash.forEach(row => {
         if (row.tahun) kvTahun[row.tahun] = (kvTahun[row.tahun] || 0) + 1;
@@ -681,7 +664,21 @@ document.getElementById('cardPenceramah').innerText = dataTapisDash.filter(r => 
       e.preventDefault();
       var btn=document.getElementById('btnSubmit'), st=document.getElementById('status');
       btn.disabled=true; st.className='loading'; st.style.display='block'; st.innerText='⏳ Memproses maklumat kehadiran...';
-      var dataBorang={nama:nama.value,ic:ic.value,institusi:institusi.value,program:program.value,penyertaan:penyertaan.value,anjuran:anjuran.value,tarikhMula:tarikhMula.value,tarikhAkhir:tarikhAkhir.value,lokasi:lokasi.value,emel:emel.value};
+      
+      var dataBorang={
+        website_trap: document.getElementById('website_trap').value,
+        nama: document.getElementById('nama').value,
+        ic: document.getElementById('ic').value,
+        institusi: document.getElementById('institusi').value,
+        program: document.getElementById('program').value,
+        penyertaan: document.getElementById('penyertaan').value,
+        anjuran: document.getElementById('anjuran').value,
+        tarikhMula: document.getElementById('tarikhMula').value,
+        tarikhAkhir: document.getElementById('tarikhAkhir').value,
+        lokasi: document.getElementById('lokasi').value,
+        emel: document.getElementById('emel').value
+      };
+
       try {
         var res=await apiPost('register',{data:dataBorang});
         st.className='success'; st.innerHTML='✅ Rekod Kehadiran Berjaya Didaftarkan!<br>No. Sijil: <strong>'+esc(res.noSijil)+'</strong>';
