@@ -8,15 +8,17 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg-gradient: linear-gradient(135deg, #060814 0%, #0b1120 100%);
-      --panel-bg: rgba(15, 23, 42, 0.85);
-      --neon-blue: #00f0ff;
-      --neon-purple: #bd00ff;
-      --neon-green: #10b981;
-      --neon-amber: #f59e0b;
-      --neon-red: #ff0055;
+      --bg-gradient: linear-gradient(135deg, #050b18 0%, #0a1733 50%, #020611 100%);
+      --panel-bg: rgba(10, 20, 42, 0.85);
+      --royal-blue: #1e40af;
+      --royal-blue-light: #3b82f6;
+      --gold-primary: #d97706;
+      --gold-light: #f59e0b;
+      --gold-bright: #fbbf24;
+      --yellow-radiant: #facc15;
+      --neon-red: #ef4444;
       --text-main: #f8fafc;
-      --border-glow: rgba(0, 240, 255, 0.15);
+      --border-glow: rgba(217, 119, 6, 0.25);
     }
     
     body {
@@ -32,10 +34,10 @@
 
     .header-portal {
       text-align: center;
-      padding: 25px 20px 25px 20px;
-      background: rgba(6, 8, 20, 0.9);
-      border-bottom: 2px solid var(--neon-blue);
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+      padding: 25px 20px;
+      background: rgba(5, 11, 24, 0.95);
+      border-bottom: 2px solid var(--gold-light);
+      box-shadow: 0 4px 25px rgba(217, 119, 6, 0.15);
       backdrop-filter: blur(15px);
     }
 
@@ -52,19 +54,20 @@
       font-size: 12px;
       font-weight: 700;
       color: #ffffff;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 6px;
       cursor: pointer;
       transition: all 0.3s;
       letter-spacing: 1px;
     }
     
     .btn-nav.active {
-      background: transparent;
-      color: var(--neon-blue);
-      border: 1px solid var(--neon-blue);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+      background: linear-gradient(135deg, var(--gold-primary), var(--gold-light));
+      color: #050b18;
+      border: 1px solid var(--yellow-radiant);
+      box-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+      font-weight: 800;
     }
 
     .page-wrapper {
@@ -84,13 +87,13 @@
       border: 1px solid var(--border-glow);
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
     }
 
     .alert-box {
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid var(--neon-amber);
-      color: #fef08a;
+      background: rgba(217, 119, 6, 0.12);
+      border: 1px solid var(--gold-light);
+      color: var(--yellow-radiant);
       padding: 15px;
       border-radius: 8px;
       margin-bottom: 25px;
@@ -111,8 +114,8 @@
     @media (max-width: 768px) { .scorecard-container { grid-template-columns: 1fr; } }
     
     .scorecard {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(245, 158, 11, 0.2);
       border-radius: 10px;
       padding: 20px;
       text-align: center;
@@ -125,41 +128,41 @@
       gap: 12px;
       margin-bottom: 30px;
       flex-wrap: wrap;
-      background: rgba(7, 10, 19, 0.4);
+      background: rgba(5, 11, 24, 0.6);
       padding: 15px;
       border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(245, 158, 11, 0.2);
       justify-content: center;
     }
-    .dash-filters select, .dash-filters input { max-width: 300px; flex: 1; min-width: 200px; background: #070a13; border: 1px solid rgba(255,255,255,0.15); color: white; padding: 10px; border-radius: 6px; }
+    .dash-filters select, .dash-filters input { max-width: 300px; flex: 1; min-width: 200px; background: #070f26; border: 1px solid rgba(245, 158, 11, 0.3); color: white; padding: 10px; border-radius: 6px; }
 
     .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
     @media (max-width: 850px) { .charts-grid { grid-template-columns: 1fr; } }
-    .chart-card { background: rgba(7, 10, 19, 0.3); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; text-align: center; }
+    .chart-card { background: rgba(5, 11, 24, 0.5); border: 1px solid rgba(245, 158, 11, 0.15); padding: 20px; border-radius: 8px; text-align: center; }
 
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
     .form-group { display: flex; flex-direction: column; }
     .form-group.full-width { grid-column: span 2; }
     
-    label { margin-bottom: 8px; font-weight: 700; color: var(--neon-blue); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
-    input, select { background: rgba(7, 10, 19, 0.7); border: 1px solid rgba(255, 255, 255, 0.15); padding: 12px; border-radius: 6px; color: white; font-size: 14px; }
-    input:focus, select:focus { outline: none; border-color: var(--neon-blue); box-shadow: 0 0 10px rgba(0, 240, 255, 0.4); }
-    select option { background: #0f172a; color: white; }
+    label { margin-bottom: 8px; font-weight: 700; color: var(--gold-bright); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+    input, select { background: rgba(7, 15, 38, 0.8); border: 1px solid rgba(245, 158, 11, 0.3); padding: 12px; border-radius: 6px; color: white; font-size: 14px; }
+    input:focus, select:focus { outline: none; border-color: var(--yellow-radiant); box-shadow: 0 0 10px rgba(250, 204, 21, 0.4); }
+    select option { background: #0a1733; color: white; }
     
-    .btn-submit { width: 100%; padding: 15px; background: linear-gradient(to right, var(--neon-blue), var(--neon-purple)); color: white; border: none; border-radius: 6px; font-weight: 800; font-size: 15px; cursor: pointer; margin-top: 15px; }
-    .btn-submit:disabled { background: #334155; box-shadow: none; cursor: not-allowed; }
+    .btn-submit { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--gold-primary), var(--gold-light), var(--yellow-radiant)); color: #050b18; border: none; border-radius: 6px; font-weight: 800; font-size: 15px; cursor: pointer; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-submit:disabled { background: #334155; box-shadow: none; cursor: not-allowed; color: #94a3b8; }
 
     .table-responsive { overflow-x: auto; margin-top: 15px; }
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    th { background: rgba(0, 240, 255, 0.08); color: var(--neon-blue); padding: 14px; font-size: 13px; border-bottom: 2px solid var(--neon-blue); }
+    th { background: rgba(217, 119, 6, 0.15); color: var(--gold-bright); padding: 14px; font-size: 13px; border-bottom: 2px solid var(--gold-light); }
     td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
-    tr:hover { background: rgba(0, 240, 255, 0.02); }
+    tr:hover { background: rgba(245, 158, 11, 0.05); }
 
     .btn-delete {
-      background: rgba(255, 0, 85, 0.1);
+      background: rgba(239, 68, 68, 0.1);
       border: 1px solid var(--neon-red);
-      color: #ffa6c9;
+      color: #fca5a5;
       padding: 6px 12px;
       border-radius: 4px;
       font-size: 11px;
@@ -170,14 +173,14 @@
     .btn-delete:hover {
       background: var(--neon-red);
       color: white;
-      box-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
     }
 
     .admin-control-panel {
       margin-top: 40px;
       padding: 25px;
-      background: rgba(7, 10, 19, 0.6);
-      border: 1px dashed var(--neon-purple);
+      background: rgba(5, 11, 24, 0.7);
+      border: 1px dashed var(--gold-light);
       border-radius: 8px;
     }
     .admin-input-grid {
@@ -189,22 +192,22 @@
     @media (max-width: 768px) { .admin-input-grid { grid-template-columns: 1fr; } }
     .btn-admin-send {
       padding: 12px 24px;
-      background: linear-gradient(to right, var(--neon-purple), #9333ea);
+      background: linear-gradient(135deg, var(--royal-blue), var(--royal-blue-light));
       color: white;
-      border: none;
+      border: 1px solid var(--gold-light);
       border-radius: 6px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 0 15px rgba(189, 0, 255, 0.3);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
     }
 
     .pagination-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
-    .btn-page { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
+    .btn-page { background: rgba(255,255,255,0.06); border: 1px solid rgba(245, 158, 11, 0.2); color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
     .btn-page:disabled { opacity: 0.2; cursor: not-allowed; }
     
     #status { margin-top: 20px; padding: 16px; border-radius: 8px; text-align: center; display: none; font-weight: 600; line-height: 1.6; }
-    .loading { background: rgba(234, 179, 8, 0.15); color: #fef08a; border: 1px solid #fef08a; }
-    .success { background: rgba(34, 197, 94, 0.12); color: #e6fdf0; border: 1px solid var(--neon-green); text-align: left !important; }
+    .loading { background: rgba(245, 158, 11, 0.15); color: var(--yellow-radiant); border: 1px solid var(--gold-light); }
+    .success { background: rgba(34, 197, 94, 0.12); color: #e6fdf0; border: 1px solid #10b981; text-align: left !important; }
 
     .footer-copyright {
       position: fixed;
@@ -219,23 +222,19 @@
       z-index: 999;
     }
 
-    /* MEDAN HONEYPOT TERSEMBUNYI UNTUK BOT SPAM */
-    .hidden-trap {
-      display: none !important;
-      visibility: hidden !important;
-    }
+    .hidden-trap { display: none !important; visibility: hidden !important; }
   </style>
 </head>
 <body>
 
-  <!-- HEADER PORTAL SIJIL DIGITAL -->
+  <!-- HEADER PORTAL -->
   <div class="header-portal">
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;margin:0 auto;padding-top:25px;padding-bottom:20px;">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;margin:0 auto;padding-top:15px;padding-bottom:15px;">
       <div style="display:flex;justify-content:center;align-items:center;width:100%;margin-bottom:12px;">
         <img src="https://lh3.googleusercontent.com/d/1N2DEP33sbNM5_ajD_b4Lk6WXOz4yHf06" alt="Logo PPD Hulu Selangor" style="height:85px;width:auto;object-fit:contain;margin:0 auto;display:block;" onerror="this.onerror=null;this.src='https://drive.google.com/thumbnail?id=1N2DEP33sbNM5_ajD_b4Lk6WXOz4yHf06&sz=w1000';">
       </div>
-      <h1 style="font-size:32px;font-weight:900;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(to right,#38bdf8,#818cf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;text-align:center;width:100%;">PORTAL SIJIL DIGITAL</h1>
-      <p style="font-size:13px;color:#94a3b8;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:6px;margin-bottom:0;text-align:center;width:100%;">PEJABAT PENDIDIKAN DAERAH HULU SELANGOR</p>
+      <h1 style="font-size:32px;font-weight:900;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(to right, #f59e0b, #fbbf24, #facc15);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;text-align:center;width:100%;">PORTAL SIJIL DIGITAL</h1>
+      <p style="font-size:13px;color:#cbd5e1;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:6px;margin-bottom:0;text-align:center;width:100%;">PEJABAT PENDIDIKAN DAERAH HULU SELANGOR</p>
     </div>
     
     <div class="nav-portal">
@@ -264,36 +263,36 @@
         </div>
 
         <div class="scorecard-container">
-          <div class="scorecard" style="border-top: 3px solid var(--neon-blue);">
+          <div class="scorecard" style="border-top: 3px solid var(--royal-blue-light);">
             <h4>Jumlah Sijil Dikeluarkan</h4>
             <div class="val" id="cardTotal">0</div>
           </div>
-          <div class="scorecard" style="border-top: 3px solid var(--neon-green);">
+          <div class="scorecard" style="border-top: 3px solid var(--gold-light);">
             <h4>Bilangan Sijil Penyertaan</h4>
             <div class="val" id="cardPeserta">0</div>
           </div>
-          <div class="scorecard" style="border-top: 3px solid var(--neon-purple);">
+          <div class="scorecard" style="border-top: 3px solid var(--yellow-radiant);">
             <h4>Bilangan Sijil Penghargaan</h4>
             <div class="val" id="cardPenceramah">0</div>
           </div>
         </div>
 
-        <div id="loadingDash" style="text-align:center; color:#64748b; padding:20px;">Mengira analitik awan...</div>
+        <div id="loadingDash" style="text-align:center; color:#94a3b8; padding:20px;">Mengira analitik awan...</div>
 
         <div class="charts-grid" id="chartsArea" style="display:none;">
           <div class="chart-card">
-            <h5 style="margin:0 0 15px 0; color:var(--neon-blue);">BILANGAN SIJIL DIKELUARKAN MENGIKUT TAHUN</h5>
+            <h5 style="margin:0 0 15px 0; color:var(--royal-blue-light);">BILANGAN SIJIL DIKELUARKAN MENGIKUT TAHUN</h5>
             <canvas id="chartTahun"></canvas>
           </div>
           <div class="chart-card">
-            <h5 style="margin:0 0 15px 0; color:var(--neon-purple);">BILANGAN SIJIL MENGIKUT SEKTOR ANJURAN</h5>
+            <h5 style="margin:0 0 15px 0; color:var(--gold-bright);">BILANGAN SIJIL MENGIKUT SEKTOR ANJURAN</h5>
             <canvas id="chartSektor"></canvas>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- PAGE 2: DAFTAR KEHADIRAN -->
+    <!-- PAGE 2: DAFTAR KEHADIRAN (TANPA NO. IC) -->
     <div id="pageDaftar" class="page-content">
       <div class="panel-futuristic">
         <div class="alert-box">
@@ -302,20 +301,17 @@
         </div>
 
         <form id="attendanceForm" onsubmit="hantarBorang(event)">
-          <!-- HONEYPOT TRAP UNTUK BOT SPAM -->
+          <!-- HONEYPOT TRAP -->
           <div class="hidden-trap">
             <input type="text" id="website_trap" name="website_trap" tabindex="-1" autocomplete="off">
           </div>
 
           <div class="form-grid">
-            <div class="form-group">
+            <div class="form-group full-width">
               <label>Nama Penuh:</label>
               <input type="text" id="nama" required placeholder="NAMA GURU (HURUF BESAR)">
             </div>
-            <div class="form-group">
-              <label>No. Kad Pengenalan:</label>
-              <input type="text" id="ic" required maxlength="12" pattern="\d{12}" placeholder="Contoh: 850312105121">
-            </div>
+            
             <div class="form-group full-width">
               <label>Nama Institusi:</label>
               <select id="institusi" required>
@@ -390,6 +386,7 @@
                 <option value="SAMT KUALA KUBU BHARU">SAMT KUALA KUBU BHARU</option>
               </select>
             </div>
+            
             <div class="form-group">
               <label>Nama Program:</label>
               <input type="text" id="program" required placeholder="Taip Nama Program Dengan Betul">
@@ -444,7 +441,7 @@
     <!-- PAGE 3: SENARAI SIJIL -->
     <div id="pageSenarai" class="page-content">
       <div class="panel-futuristic">
-        <h3 style="color:var(--neon-blue); margin-top:0; text-align:center; letter-spacing:1px;">REKOD SENARAI FAIL SIJIL GURU</h3>
+        <h3 style="color:var(--gold-bright); margin-top:0; text-align:center; letter-spacing:1px;">REKOD SENARAI FAIL SIJIL GURU</h3>
         
         <div class="dash-filters" style="margin-bottom:20px;">
           <input type="text" id="searchNama" oninput="jalankanPenapisanJadual()" placeholder="🔍 Cari Nama Penuh...">
@@ -455,7 +452,7 @@
           </select>
         </div>
 
-        <div id="loadingSenarai" style="text-align: center; color: #64748b; padding: 20px;">Menarik data awan...</div>
+        <div id="loadingSenarai" style="text-align: center; color: #94a3b8; padding: 20px;">Menarik data awan...</div>
         
         <div class="table-responsive">
           <table id="tabelSijil" style="display: none;">
@@ -475,13 +472,13 @@
 
         <div class="pagination-controls">
           <button id="btnBack" class="btn-page" onclick="pageKeBelakang()">&laquo; Back</button>
-          <span id="indikatorPage" style="font-size: 13px; color:#94a3b8; font-weight: 600;">Halaman 1 dari 1</span>
+          <span id="indikatorPage" style="font-size: 13px; color:#cbd5e1; font-weight: 600;">Halaman 1 dari 1</span>
           <button id="btnForward" class="btn-page" onclick="pageKeHadapan()">Next &raquo;</button>
         </div>
 
-        <!-- PANEL KELULUSAN & PENJANAAN PUKAL ADMIN -->
+        <!-- PANEL KELULUSAN ADMIN -->
         <div class="admin-control-panel">
-          <h4 style="margin: 0 0 15px 0; color: var(--neon-purple); letter-spacing: 1px;">🔐 PANEL KELULUSAN JANA & HANTAR EMEL (ADMIN ONLY)</h4>
+          <h4 style="margin: 0 0 15px 0; color: var(--gold-bright); letter-spacing: 1px;">🔐 PANEL KELULUSAN JANA & HANTAR EMEL (ADMIN ONLY)</h4>
           <div class="admin-input-grid">
             <div class="form-group" style="margin:0;">
               <label>ID Admin MOE:</label>
@@ -595,16 +592,16 @@
     function renderGrafTahun(labels, dataValues) {
       if (instanceChartTahun) instanceChartTahun.destroy();
       instanceChartTahun = new Chart(document.getElementById('chartTahun').getContext('2d'), {
-        type:'bar', data:{labels,datasets:[{label:'Bilangan Sijil',data:dataValues,backgroundColor:'rgba(0,240,255,.4)',borderColor:'#00f0ff',borderWidth:2}]},
-        options:{scales:{y:{beginAtZero:true,ticks:{color:'#94a3b8'}},x:{ticks:{color:'#94a3b8'}}},plugins:{legend:{display:false}}}
+        type:'bar', data:{labels,datasets:[{label:'Bilangan Sijil',data:dataValues,backgroundColor:'rgba(59,130,246,.6)',borderColor:'#3b82f6',borderWidth:2}]},
+        options:{scales:{y:{beginAtZero:true,ticks:{color:'#cbd5e1'}},x:{ticks:{color:'#cbd5e1'}}},plugins:{legend:{display:false}}}
       });
     }
 
     function renderGrafSektor(labels, dataValues) {
       if (instanceChartSektor) instanceChartSektor.destroy();
       instanceChartSektor = new Chart(document.getElementById('chartSektor').getContext('2d'), {
-        type:'bar', data:{labels,datasets:[{label:'Bilangan Sijil',data:dataValues,backgroundColor:'rgba(189,0,255,.4)',borderColor:'#bd00ff',borderWidth:2}]},
-        options:{indexAxis:'y',scales:{x:{beginAtZero:true,ticks:{color:'#94a3b8'}},y:{ticks:{color:'#94a3b8'}}},plugins:{legend:{display:false}}}
+        type:'bar', data:{labels,datasets:[{label:'Bilangan Sijil',data:dataValues,backgroundColor:'rgba(245,158,11,.6)',borderColor:'#f59e0b',borderWidth:2}]},
+        options:{indexAxis:'y',scales:{x:{beginAtZero:true,ticks:{color:'#cbd5e1'}},y:{ticks:{color:'#cbd5e1'}}},plugins:{legend:{display:false}}}
       });
     }
 
@@ -648,9 +645,9 @@
       var start=(pageAktif-1)*barisLimit, dataPotong=dataTapisJadual.slice(start,start+barisLimit);
       dataPotong.forEach(item=>{
         var no=item.noSijil||'Tiada Siri', inst=item.institusi||'PPD HULU SELANGOR', peranan=(item.penyertaan||'PESERTA').toUpperCase();
-        var warna=item.statusEmel==='DIJANA'?'var(--neon-green)':'var(--neon-amber)';
+        var warna=item.statusEmel==='DIJANA'?'#10b981':'var(--gold-light)';
         var tr=document.createElement('tr');
-        tr.innerHTML='<td style="color:var(--neon-blue);font-weight:700;">'+esc(no)+'</td><td style="font-weight:600;color:#fff;">'+esc(item.nama)+'</td><td>'+esc(inst)+'</td><td style="color:var(--neon-purple);font-weight:700;">'+esc(peranan)+'</td><td style="color:'+warna+';font-weight:700;">'+esc(item.statusEmel)+'</td><td></td>';
+        tr.innerHTML='<td style="color:var(--gold-bright);font-weight:700;">'+esc(no)+'</td><td style="font-weight:600;color:#fff;">'+esc(item.nama)+'</td><td>'+esc(inst)+'</td><td style="color:var(--royal-blue-light);font-weight:700;">'+esc(peranan)+'</td><td style="color:'+warna+';font-weight:700;">'+esc(item.statusEmel)+'</td><td></td>';
         var b=document.createElement('button'); b.className='btn-delete'; b.textContent='Delete'; b.onclick=()=>requestPadamRekod(no); tr.lastElementChild.appendChild(b); body.appendChild(tr);
       });
       var maxPage=Math.ceil(dataTapisJadual.length/barisLimit);
@@ -660,6 +657,7 @@
       document.getElementById('tabelSijil').style.display='table';
     }
 
+    // HANTAR BORANG TANPA NO IC
     async function hantarBorang(e) {
       e.preventDefault();
       var btn=document.getElementById('btnSubmit'), st=document.getElementById('status');
@@ -668,7 +666,6 @@
       var dataBorang={
         website_trap: document.getElementById('website_trap').value,
         nama: document.getElementById('nama').value,
-        ic: document.getElementById('ic').value,
         institusi: document.getElementById('institusi').value,
         program: document.getElementById('program').value,
         penyertaan: document.getElementById('penyertaan').value,
@@ -684,7 +681,7 @@
         st.className='success'; st.innerHTML='✅ Rekod Kehadiran Berjaya Didaftarkan!<br>No. Sijil: <strong>'+esc(res.noSijil)+'</strong>';
         document.getElementById('attendanceForm').reset();
       } catch(err) {
-        st.className='loading'; st.style.borderColor='var(--neon-red)'; st.style.color='#ffa6c9'; st.innerText='❌ Ralat: '+err.message;
+        st.className='loading'; st.style.borderColor='var(--neon-red)'; st.style.color='#fca5a5'; st.innerText='❌ Ralat: '+err.message;
       } finally { btn.disabled=false; }
     }
 
@@ -692,10 +689,10 @@
       var id=document.getElementById('adminId').value, pass=document.getElementById('adminPass').value;
       var statusText=document.getElementById('adminStatusArea'), btn=document.getElementById('btnAdminRelease');
       if(!id||!pass){alert('Sila isi ID Admin dan Kata Laluan terlebih dahulu!');return;}
-      btn.disabled=true; statusText.style.display='block'; statusText.style.color='var(--neon-amber)'; statusText.innerText='⏳ Sedang menjana dan menghantar sijil...';
+      btn.disabled=true; statusText.style.display='block'; statusText.style.color='var(--gold-light)'; statusText.innerText='⏳ Sedang menjana dan menghantar sijil...';
       try {
         var msg=await apiPost('bulkSend',{adminId:id,adminPass:pass});
-        statusText.style.color=msg.includes('Ralat')?'var(--neon-red)':'var(--neon-green)'; statusText.innerText=msg;
+        statusText.style.color=msg.includes('Ralat')?'var(--neon-red)':'#10b981'; statusText.innerText=msg;
         if(!msg.includes('Ralat')){ document.getElementById('adminPass').value=''; await muatSenaraiSijil('pageSenarai',document.querySelectorAll('.btn-nav')[2]); }
       } catch(e){ statusText.style.color='var(--neon-red)'; statusText.innerText='Ralat Jaringan: '+e.message; }
       finally{ btn.disabled=false; }
